@@ -6,7 +6,15 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # --- Etapa 2: Ejecutar con Java 21 ---
-FROM openjdk:21-jdk-slim
+# CORRECCIÓN: 'openjdk:21-jdk-slim' no existe. 
+# Usamos 'eclipse-temurin:21-jre-alpine' que es oficial, segura y muy ligera.
+FROM eclipse-temurin:21-jre-alpine
+
+# Es buena práctica definir el WORKDIR en la etapa final también
+WORKDIR /app
+
 COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
+
 ENTRYPOINT ["java","-jar","app.jar"]
